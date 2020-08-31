@@ -14,13 +14,19 @@ try:
     # This assumes the version names are of the form prefix:number
     # Where prefix is any text.  We simply split on the ':' and
     # select the last item as the numeric version
-    new_version = sys.argv[1].split("-")[-1]
-    old_version = sys.argv[2].split("-")[-1]
 
+    new_version = sys.argv[1].split("-")[-1]
+
+    loc=sys.argv[2].find("_INCONSISTENT") #check for inconsistent suffix
+    if loc == -1:
+        old_version = sys.argv[2].split("-")[-1] #find int at end of build
+    else:
+        old_version= sys.argv[2][0:loc].split("-")[-1]#drop suffix and find int
+    
     f = open( '/data/newversion', 'w' )
     f.write( sys.argv[1] )
     f.close()
-    
+
     if int(new_version) > int(old_version):
         # The new version ordinal is greater.  Allow installation.
         rc = 0
